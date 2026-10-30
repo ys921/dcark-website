@@ -344,6 +344,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
 footer .logo img{height:26px}
 footer .sep{border-top:1px solid var(--line);padding-top:18px;width:100%;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
+/* BACK TO TOP */
+.totop{position:fixed;right:calc(24px + env(safe-area-inset-right, 0px));bottom:calc(24px + env(safe-area-inset-bottom, 0px));z-index:40;width:52px;height:52px;border-radius:50%;border:1px solid color-mix(in srgb,var(--fg) 12%,transparent);background:var(--nav);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);color:var(--fg);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 10px 30px -10px rgba(0,0,0,.35);opacity:0;transform:translateY(16px) scale(.9);pointer-events:none;transition:opacity .35s var(--ease),transform .35s var(--ease),background .2s}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{background:color-mix(in srgb,var(--accent) 22%,var(--nav))}
+.totop:active{transform:scale(.94)}
+.totop .arrow{width:20px;height:20px;stroke-width:2.2;transition:transform .25s var(--ease)}
+.totop:hover .arrow{transform:translateY(-2px)}
+.totop .ring{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);transform:rotate(-90deg);pointer-events:none}
+.totop .ring circle{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round}
+@media (max-width:620px){.totop{width:46px;height:46px;right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px))}}
+
 /* RESPONSIVE */
 @media (max-width:900px){
   .nav-links,.nav-cta{display:none}
@@ -752,6 +763,11 @@ footer .sep{border-top:1px solid var(--line);padding-top:18px;width:100%;display
   </div>
 </footer>
 
+<button class="totop" id="toTop" type="button" aria-label="Back to top" tabindex="-1" aria-hidden="true">
+  <svg class="ring" viewBox="0 0 52 52" aria-hidden="true"><circle id="toTopRing" cx="26" cy="26" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8"/></svg>
+  <svg class="ic arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg>
+</button>
+
 <script>
 (function(){
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -928,6 +944,27 @@ footer .sep{border-top:1px solid var(--line);padding-top:18px;width:100%;display
     function fallback(){var r=document.createRange();r.selectNodeContents($('phoneNum'));var s=window.getSelection();s.removeAllRanges();s.addRange(r);msg.textContent='Selected. Press Ctrl+C to copy.'}
     try{navigator.clipboard.writeText(num).then(function(){msg.textContent='Copied'},fallback)}catch(e){fallback()}
   });
+
+  /* back to top */
+  var toTop=$('toTop'),ring=$('toTopRing'),C=150.8,ttTick=false;
+  function ttFrame(){
+    ttTick=false;
+    var max=document.documentElement.scrollHeight-window.innerHeight,y=window.scrollY,p=max>0?Math.min(1,y/max):0;
+    ring.setAttribute('stroke-dashoffset',(C*(1-p)).toFixed(1));
+    var show=y>window.innerHeight*0.8;
+    if(show!==toTop.classList.contains('show')){
+      toTop.classList.toggle('show',show);
+      toTop.setAttribute('aria-hidden',!show);
+      toTop.tabIndex=show?0:-1;
+    }
+  }
+  window.addEventListener('scroll',function(){if(!ttTick){ttTick=true;requestAnimationFrame(ttFrame)}},{passive:true});
+  window.addEventListener('resize',ttFrame);
+  toTop.addEventListener('click',function(){
+    window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+    var logo=document.querySelector('.nav .logo');if(logo)logo.focus({preventScroll:true});
+  });
+  ttFrame();
 
   $('yr').textContent=new Date().getFullYear();
 })();
