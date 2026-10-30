@@ -60,7 +60,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:60;background:var(--nav)}
 img{max-width:100%;height:auto;display:block}
@@ -136,6 +136,11 @@ button{font:inherit;color:inherit}
 .alt .seg{background:var(--card)}
 .seg button{border:0;background:transparent;padding:10px 20px;border-radius:999px;font-size:15px;font-weight:500;color:var(--fg-2);cursor:pointer;white-space:nowrap;transition:background .3s var(--ease),color .3s}
 .seg button[aria-selected="true"]{background:var(--fg);color:var(--bg)}
+.seg button:active:not([aria-selected="true"]){background:color-mix(in srgb,var(--accent) 24%,transparent);color:var(--fg);transform:scale(.97)}
+.picker .seg button:active:not([aria-selected="true"]){color:var(--stage-fg)}
+.pillbtn:active,.ghost:active,.car-btns button:active{transform:scale(.96)}
+.node:active .b{transform:scale(1.04);background:var(--accent);color:var(--on-accent)}
+.menu a:not(.menu-cta):active{color:var(--accent-text)}
 .area-panel{margin-top:40px;background:var(--card);border-radius:30px;padding:clamp(28px,5vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;box-shadow:var(--shadow);text-align:left}
 .area-panel>*{min-width:0}
 .area-art{aspect-ratio:1;max-width:100%;border-radius:24px;display:grid;place-items:center;background:radial-gradient(70% 70% at 50% 40%,var(--accent-soft),transparent 75%),var(--bg-2);position:relative;overflow:hidden}
